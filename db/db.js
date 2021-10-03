@@ -17,6 +17,11 @@ class Db {
         this.users.push(user);
     }
 
+    removeUser(name) {
+        const index = this.users.findIndex((usrN) => usrN === name);
+        this.users.splice(index, 1);
+    }
+
     contains(userName) {
         return this.users.some((name) => name === userName);
     }

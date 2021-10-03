@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
 import { nanoid } from 'nanoid';
 import WS from 'ws';
@@ -25,6 +26,7 @@ export default class MyWs {
 
         const wsInstance = this.addClient(ws);
         this.addMsgListener(wsInstance);
+        this.addCloseListener(wsInstance);
 
         const connectData = {
             messages: db.getHtmlAll(),
@@ -48,6 +50,8 @@ export default class MyWs {
             }
 
             if (msg.login) {
+                wsInstance.userName = msg.login;
+
                 response = JSON.stringify({
                     usrHtml: db.getAvatar(msg.login),
                     userName: msg.name,
@@ -62,14 +66,30 @@ export default class MyWs {
         });
     }
 
+    addCloseListener(wsInstance) {
+        wsInstance.ws.on('close', () => {
+            this.activeWs = wsInstance;
+            db.removeUser(wsInstance.userName);
+
+            const response = JSON.stringify({
+                delUsrName: wsInstance.userName,
+            });
+            this.sendToClients(response);
+        });
+    }
+
     sendToClients(response) {
-        const readyClients = this.clients.filter((client) => {
+        const readyClients = this.getReadyClients();
+
+        readyClients.forEach((client) => client.ws.send(response));
+    }
+
+    getReadyClients() {
+        return this.clients.filter((client) => {
             const checkOpen = client.ws.readyState === WS.OPEN;
             const checkCurrent = client.id !== this.activeWs.id;
 
             return checkOpen && checkCurrent;
         });
-
-        readyClients.forEach((client) => client.ws.send(response));
     }
 }
