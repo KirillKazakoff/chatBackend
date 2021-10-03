@@ -1,0 +1,36 @@
+{
+    "name": "html-expample",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "ISC",
+    "scripts": {
+        "lint": "eslint .",
+        "prestart": "yarn",
+        "dev": "nodemon --exec babel-node --inspect serverApp.js",
+        "start": "nodemon --exec babel-node serverApp.js"
+    },
+    "devDependencies": {
+        "eslint": "^7.31.0",
+        "eslint-config-airbnb-base": "^14.2.1",
+        "eslint-plugin-import": "^2.23.4"
+    },
+    "engines": {
+        "node": "<11.x"
+    },
+    "dependencies": {
+        "@babel/cli": "^7.15.7",
+        "@babel/core": "^7.15.5",
+        "@babel/node": "^7.15.4",
+        "@babel/preset-env": "^7.15.6",
+        "heroku": "^7.59.0",
+        "koa": "^2.13.1",
+        "koa-body": "^4.2.0",
+        "koa-bodyparser": "^4.3.0",
+        "koa-combine-routers": "^4.0.2",
+        "koa-router": "^10.1.1",
+        "luxon": "^2.0.2",
+        "nanoid": "^3.1.28",
+        "nodemon": "^2.0.13",
+        "ws": "^8.2.2"
+    }
+}
