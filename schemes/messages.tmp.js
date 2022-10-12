@@ -1,27 +1,26 @@
-/* eslint-disable import/prefer-default-export */
 import { getTime } from '../lib/utils';
 
 const headerDataT = () => ({
     block: 'span',
-    cls: 'header-data',
+    cls: 'message__header-data',
     content: getTime(),
 });
 
 const headerNameT = (name) => ({
     block: 'span',
-    cls: 'header-name',
+    cls: 'message__header-name',
     content: `${name},`,
 });
 
 const headerT = (name) => ({
     block: 'header',
-    cls: 'message-header',
+    cls: 'message__header',
     content: [headerNameT(name), headerDataT()],
 });
 
 const contentT = (message) => ({
     block: 'div',
-    cls: 'message-content',
+    cls: 'message__content',
     content: message,
 });
 
@@ -33,6 +32,6 @@ export const mesT = (mesData) => ({
 
 export const personalMesT = (mesData) => ({
     block: 'li',
-    cls: 'message message__you',
+    cls: 'message message--you',
     content: [headerT('You'), contentT(mesData.message)],
 });

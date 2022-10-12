@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable class-methods-use-this */
 import { nanoid } from 'nanoid';
 import WS from 'ws';
 import db from './db/db';
@@ -56,10 +55,12 @@ export default class MyWs {
                     usrHtml: db.getAvatar(msg.login),
                     userName: msg.name,
                 });
-                this.activeWs.ws.send(JSON.stringify({
-                    usrHtml: db.getAvatar('You'),
-                    userName: msg.name,
-                }));
+                this.activeWs.ws.send(
+                    JSON.stringify({
+                        usrHtml: db.getAvatar('You'),
+                        userName: msg.name,
+                    }),
+                );
             }
 
             this.sendToClients(response);
