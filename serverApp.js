@@ -6,10 +6,12 @@ import MyWs from './myWs';
 
 const app = new Koa();
 
-app.use(koaBody({
-    urlencoded: true,
-    multipart: true,
-}));
+app.use(
+    koaBody({
+        urlencoded: true,
+        multipart: true,
+    })
+);
 
 app.use(async (ctx, next) => {
     const origin = ctx.request.get('Origin');
@@ -17,7 +19,7 @@ app.use(async (ctx, next) => {
         return await next();
     }
 
-    const headers = { 'Access-Control-Allow-Origin': '*', };
+    const headers = { 'Access-Control-Allow-Origin': '*' };
 
     if (ctx.request.method !== 'OPTIONS') {
         ctx.response.set({ ...headers });
@@ -36,7 +38,10 @@ app.use(async (ctx, next) => {
         });
 
         if (ctx.request.get('Access-Control-Request-Headers')) {
-            ctx.response.set('Access-Control-Allow-Headers', ctx.request.get('Access-Control-Request-Headers'));
+            ctx.response.set(
+                'Access-Control-Allow-Headers',
+                ctx.request.get('Access-Control-Request-Headers')
+            );
         }
 
         ctx.response.status = 204;
