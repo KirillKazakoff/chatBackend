@@ -21,28 +21,20 @@ export default class MyWs {
     }
 
     onConnection(ws) {
-        const errCallback = (e) => console.log(e);
-
         const wsInstance = this.addClient(ws);
         this.addMsgListener(wsInstance);
         this.addCloseListener(wsInstance);
-
-        const connectData = {
-            // messages: db.getHtmlAll(),
-            avatars: db.getAvatars(),
-        };
-        ws.send(JSON.stringify(connectData), errCallback);
     }
 
     addMsgListener(wsInstance) {
         wsInstance.ws.on('message', (e) => {
-            this.activeWs = wsInstance;
+            this.currentWs = wsInstance;
             const msg = JSON.parse(e);
 
-            let response = null;
+            let responseToOtherClients = null;
 
             if (msg.message) {
-                response = JSON.stringify({
+                responseToOtherClients = JSON.stringify({
                     msgHtml: db.getHtmlMes(msg),
                     userName: msg.name,
                 });
@@ -51,30 +43,27 @@ export default class MyWs {
             if (msg.login) {
                 wsInstance.userName = msg.login;
 
-                response = JSON.stringify({
-                    usrHtml: db.getAvatar(msg.login),
-                    userName: msg.login,
+                responseToOtherClients = JSON.stringify({
+                    avatar: db.getAvatar(msg.login),
+                    newParticipant: msg.login,
                 });
-
-                const messages = db.getHtmlPersAll(msg.login);
-                console.log(messages);
 
                 wsInstance.ws.send(
                     JSON.stringify({
-                        usrHtml: db.getAvatar('You'),
-                        userName: msg.login,
-                        messages: db.getHtmlPersAll(msg.login),
+                        avatars: db.getAvatars(msg.login),
+                        login: msg.login,
+                        messages: db.getHtmlMesAll(msg.login),
                     }),
                 );
             }
 
-            this.sendToClients(response);
+            this.sendToClients(responseToOtherClients);
         });
     }
 
     addCloseListener(wsInstance) {
         wsInstance.ws.on('close', () => {
-            this.activeWs = wsInstance;
+            this.currentWs = wsInstance;
             db.removeUser(wsInstance.userName);
 
             const response = JSON.stringify({
@@ -84,18 +73,17 @@ export default class MyWs {
         });
     }
 
-    sendToClients(response) {
-        const readyClients = this.getReadyClients();
-
-        readyClients.forEach((client) => client.ws.send(response));
-    }
-
-    getReadyClients() {
+    getClientsExceptCurrent() {
         return this.clients.filter((client) => {
             const checkOpen = client.ws.readyState === WS.OPEN;
-            const checkCurrent = client.id !== this.activeWs.id;
+            const checkCurrent = client.id !== this.currentWs.id;
 
             return checkOpen && checkCurrent;
         });
+    }
+
+    sendToClients(response) {
+        const readyClients = this.getClientsExceptCurrent();
+        readyClients.forEach((client) => client.ws.send(response));
     }
 }

@@ -17,30 +17,26 @@ class Db {
         this.users.push(user);
     }
 
+    contains(userName) {
+        return this.users.some((name) => name === userName);
+    }
+
     removeUser(userName) {
         const index = this.users.findIndex((usrN) => usrN === userName);
         this.users.splice(index, 1);
-    }
-
-    contains(userName) {
-        return this.users.some((name) => name === userName);
     }
 
     getHtmlMes(mes) {
         return engine(mesT(mes));
     }
 
-    getHtmlAll() {
-        return this.messages.map(this.getHtmlMes);
-    }
-
-    getHtmlPers(mes) {
+    getHtmlMesPers(mes) {
         return engine(personalMesT(mes));
     }
 
-    getHtmlPersAll(userName) {
+    getHtmlMesAll(userName) {
         return this.messages.map((message) => {
-            if (message.name === userName) return this.getHtmlPers(message);
+            if (message.name === userName) return this.getHtmlMesPers(message);
             return this.getHtmlMes(message);
         });
     }
@@ -52,8 +48,11 @@ class Db {
         };
     }
 
-    getAvatars() {
-        return this.users.map(this.getAvatar);
+    getAvatars(login) {
+        return this.users.map((user) => {
+            if (user === login) return this.getAvatar('You');
+            return this.getAvatar(user);
+        });
     }
 }
 
