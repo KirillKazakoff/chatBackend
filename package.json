@@ -7,7 +7,7 @@
         "lint": "eslint .",
         "prestart": "yarn",
         "dev": "nodemon --exec babel-node --inspect serverApp.js",
-        "start": "nodemon --exec babel-node serverApp.js"
+        "start": "nodemon --exec babel-node serverApp.js --mode production"
     },
     "devDependencies": {
         "eslint": "^7.31.0",

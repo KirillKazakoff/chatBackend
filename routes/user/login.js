@@ -9,7 +9,7 @@ router.post('/user/login', async (ctx) => {
 
     if (db.contains(user)) {
         ctx.response.status = 400;
-        ctx.response.body = { status: 'there is a user same name' };
+        ctx.response.body = { status: 'Уже зарегистрирован пользователь с таким именем' };
         return;
     }
 
