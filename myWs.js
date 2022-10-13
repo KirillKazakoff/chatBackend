@@ -28,7 +28,7 @@ export default class MyWs {
         this.addCloseListener(wsInstance);
 
         const connectData = {
-            messages: db.getHtmlAll(),
+            // messages: db.getHtmlAll(),
             avatars: db.getAvatars(),
         };
         ws.send(JSON.stringify(connectData), errCallback);
@@ -53,12 +53,17 @@ export default class MyWs {
 
                 response = JSON.stringify({
                     usrHtml: db.getAvatar(msg.login),
-                    userName: msg.name,
+                    userName: msg.login,
                 });
-                this.activeWs.ws.send(
+
+                const messages = db.getHtmlPersAll(msg.login);
+                console.log(messages);
+
+                wsInstance.ws.send(
                     JSON.stringify({
                         usrHtml: db.getAvatar('You'),
-                        userName: msg.name,
+                        userName: msg.login,
+                        messages: db.getHtmlPersAll(msg.login),
                     }),
                 );
             }

@@ -17,13 +17,17 @@ class Db {
         this.users.push(user);
     }
 
-    removeUser(name) {
-        const index = this.users.findIndex((usrN) => usrN === name);
+    removeUser(userName) {
+        const index = this.users.findIndex((usrN) => usrN === userName);
         this.users.splice(index, 1);
     }
 
     contains(userName) {
         return this.users.some((name) => name === userName);
+    }
+
+    getHtmlMes(mes) {
+        return engine(mesT(mes));
     }
 
     getHtmlAll() {
@@ -34,8 +38,11 @@ class Db {
         return engine(personalMesT(mes));
     }
 
-    getHtmlMes(mes) {
-        return engine(mesT(mes));
+    getHtmlPersAll(userName) {
+        return this.messages.map((message) => {
+            if (message.name === userName) return this.getHtmlPers(message);
+            return this.getHtmlMes(message);
+        });
     }
 
     getAvatar(userName) {
