@@ -1,9 +1,7 @@
-import { getTime } from '../lib/utils';
-
 const headerDataT = () => ({
     block: 'span',
     cls: 'message__header-data',
-    content: getTime(),
+    content: '',
 });
 
 const headerNameT = (name) => ({
